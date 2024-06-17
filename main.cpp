@@ -2,73 +2,49 @@
 #include <ctime>
 using namespace std;
 
-void addColumn(int**& arr, int& rows, int& cols, int pos) {
-	int** newArr = new int* [rows];
-	for (int i = 0; i < rows; i++) {
-		newArr[i] = new int[cols + 1];
-	}
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < pos; j++) {
-			newArr[i][j] = arr[i][j];
-		}
-		newArr[i][pos] = rand() % 100;
-		for (int j = pos + 1; j < cols + 1; j++) {
-			newArr[i][j] = arr[i][j - 1];
+void removeColumn(int** arr, int rows, int cols, int colToRemove)
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = colToRemove; j < cols - 1; j++)
+		{
+			arr[i][j] = arr[i][j + 1];
 		}
 	}
-	for (int i = 0; i < rows; i++) {
+}
+
+int main()
+{
+	srand(time(0));
+	int rows = 5, cols = 5, colToRemove = 2;
+	int** arr = new int* [rows];
+	cout << "Choose a column to remove (0-4): ";
+	cin >> colToRemove;
+	for (int i = 0; i < rows; i++)
+	{
+		arr[i] = new int[cols];
+		for (int j = 0; j < cols; j++)
+		{
+			arr[i][j] = rand() % 10;
+			cout << arr[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+	removeColumn(arr, rows, cols, colToRemove);
+	cout << "\nArray after removing column " << colToRemove << ":\n" << endl;
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols - 1; j++)
+		{
+			cout << arr[i][j] << " ";
+		}
+		cout << endl;
+	}
+	for (int i = 0; i < rows; i++)
+	{
 		delete[] arr[i];
 	}
 	delete[] arr;
-	arr = newArr;
-	cols++;
-}
-
-int main() {
-    using namespace std;
-
-    int rows, cols, position;
-
-    cout << "Enter the number of rows: ";
-    cin >> rows;
-    cout << "Enter the number of columns: ";
-    cin >> cols;
-
-    int** array = new int* [rows];
-    for (int i = 0; i < rows; ++i) {
-        array[i] = new int[cols];
-    }
-
-    cout << "Enter the elements of the array:" << endl;
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            cout << "Element [" << i << "][" << j << "]: ";
-            cin >> array[i][j];
-        }
-    }
-
-    cout << "Enter the position to add a new column: ";
-    cin >> position;
-
-    if (position < 0 || position > cols) {
-        cout << "Invalid position." << endl;
-        return 1;
-    }
-
-    addColumn(array, rows, cols, position);
-
-    cout << "Array after adding the column:" << endl;
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            cout << array[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-    for (int i = 0; i < rows; ++i) {
-        delete[] array[i];
-    }
-    delete[] array;
-
-    return 0;
+	return 0;
 }
